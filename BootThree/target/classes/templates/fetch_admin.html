@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Hello, Mixa</title>
+</head>
+<body style="height: 100vh">
+
+<div class="container-fluid h-100">
+    <nav class="navbar navbar-dark bg-dark w-100">
+        <a class="navbar-brand" href="#">Admin</a>
+        <a class="navbar-brand" href="/logout">Logout</a>
+    </nav>
+    <div class="row no-gutters h-100">
+        <div class="col-2 h-100">
+            <div class="list-group">
+                <a href="#!" class="list-group-item active"  id="admin">Admin</a>
+                <a href="#!" class="list-group-item list-group-item-action" id="user">User</a>
+            </div>
+        </div>
+        <div class="col-10 bg-light p-5 h-100" id="usersAll">
+
+            <h2>Admin panel</h2>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="profil-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div>
+                        <h5 class="border p-3 mb-0">All users</h5>
+                        <table class="table table-striped bg-white pl-3">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Password</th>
+                                <th>Role</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody id="userAllList">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <div>
+                        <h5 class="border p-3 mb-0">Add new user</h5>
+                        <div class="d-flex justify-content-center  bg-white">
+
+                            <form>
+                                <div class="form-group">
+                                    <label for="nameUserInput">Name input</label>
+                                    <input type="text"  name="username" id="nameUserInput" class="form-control" value="" placeholder="Name" required="required">
+                                </div>
+                                <div class="form-group">
+                                    <label for="passwordCreate">Password input</label>
+                                    <input type="text"  name="password" id="passwordCreate" class="form-control" value="" placeholder="Password" required="required">
+                                </div>
+                                <div class="form-group">
+                                    <label for="disabledSelect">ROLE menu</label>
+                                    <select id="disabledSelect"  multiple size="2" name="roles" class="form-control">
+                                        <option  value="ADMIN">ADMIN select</option>
+                                        <option  value="USER">USER select</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary"  onclick="createNewUser()">Add new user</button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="col-10 bg-light p-5 h-100" id="userOne" style="display: none">
+            <h2>User information-page</h2>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="home-tab">
+                    <div>
+                        <h5 class="border p-3 mb-0">About user</h5>
+                        <table class="table table-striped bg-white pl-3">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Password</th>
+                                <th>Role</th>
+                            </tr>
+                            </thead>
+                            <tbody  id="infoUsersActiv">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal update -->
+<div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalAll">
+
+                <form id="formUser">
+                    <div class="form-group">
+                        <fieldset disabled>
+                        <label for="idForm">Id</label>
+                        <input type="text" class="form-control" id="idForm" placeholder="id">
+                        </fieldset>
+                    </div>
+                    <div class="form-group">
+                        <label for="usernameForm">Username</label>
+                        <input type="text" class="form-control" id="usernameForm" placeholder="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordForm">Password</label>
+                        <input type="text" class="form-control" id="passwordForm" placeholder="password">
+                    </div>
+                    <div class="form-group">
+                        <label for="disabledSelectForm">ROLE menu</label>
+                        <select id="disabledSelectForm"  multiple size="2" name="roles" class="form-control">
+                            <option id="adminAction"  value="ADMIN">ADMIN select</option>
+                            <option id="userAction"  value="USER">USER select</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" onclick="updateResult()">Edit</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal delete -->
+<div class="modal" id="exampleModalNew" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabelDelete">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalAllDelete">
+
+                <form id="formUserDelete">
+                    <fieldset disabled>
+                    <div class="form-group">
+                        <label for="idFormDelete">Id</label>
+                        <input type="text" class="form-control" id="idFormDelete" placeholder="id">
+                    </div>
+                    <div class="form-group">
+                        <label for="usernameFormDelete">Username</label>
+                        <input type="text" class="form-control" id="usernameFormDelete" placeholder="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordFormDelete">Password</label>
+                        <input type="text" class="form-control" id="passwordFormDelete" placeholder="password">
+                    </div>
+                        <div class="form-group">
+                            <label for="formRoleDelete">Role</label>
+                            <input type="text" value="${roleAll}" class="form-control" id="formRoleDelete" placeholder="role">
+                        </div>
+                    </fieldset>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" onclick="deleteResult()">Delete</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script>
+
+    function reStart(){
+        fetch('/admin/indexRest')
+            .then(response => response.json())
+            .then(result => {
+                $('#userAllList').empty()
+                console.log(result)
+                for(let user of result){
+                    let roles = user.authorities
+                    let roleAll = "";
+                    for (let role of roles){
+                        roleAll = roleAll + role.authority + " "
+                    }
+                    $('#userAllList').append(`<tr id="infoUsers"></tr>
+                    <td id="idUser">${user.id}</td>
+                    <td id="idUsername">${user.username}</td>
+                    <td id="idPassword">${user.password}</td>
+                    <td id="idRole">${roleAll}</td>
+                    <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id="${user.id}" onclick="updateUserStart(${user.id})">Edit</button></td>
+                    <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalNew" id="${user.id}" onclick="deleteData(${user.id})" >Delete</button></td>`)
+                }
+            })
+    }
+
+</script>
+
+<script>
+    jQuery(function (){
+        reStart()
+    })
+</script>
+
+<!--            активный юзер-->
+
+<script>
+    window.addEventListener('load',
+        fetch('/admin/activeUser')
+            .then(response => response.json())
+            .then(result => {
+                    console.log(result)
+                        let roles = result.authorities
+                        let roleAll = "";
+                        for (let role of roles){
+                            roleAll = roleAll + role.authority + " "
+                        }
+                        $('#infoUsersActiv').append(`<tr></tr>
+                            <td id="idUser">${result.id}</td>
+                            <td id="idUsername">${result.username}</td>
+                            <td id="idPassword">${result.password}</td>
+                            <td id="idRole">${roleAll}</td>
+                          `)
+                    }
+            )
+    )
+
+</script>
+
+<!--         обновление-->
+
+<script>
+    async function updateUserStart(id){
+     await    fetch('/admin/updateUserStart/'+ id, {
+            method : 'PUT'
+        })
+            .then(response => response.json())
+            .then(result => {
+                $('#idForm').val(result.id)
+                $('#usernameForm').val(result.username)
+                $('#passwordForm').val(result.password)
+                    if(result.rolesArray.includes("ADMIN"))
+                    {$('#adminAction').attr('selected', 'selected')}
+                    if(result.rolesArray.includes("USER"))
+                    { $('#userAction').attr('selected', 'selected')}
+            })
+    }
+
+</script>
+
+<script>
+    async function updateResult(updateId){
+        console.log("update2")
+        const id = $('#idForm').val()
+        const username = $('#usernameForm').val()
+        const password = $('#passwordForm').val()
+        let array = $('#disabledSelectForm').val()
+        await   fetch("/admin/updateResult", {
+            method : 'PUT',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify({
+                id: id,
+                username: username,
+                password: password,
+                authorities: array
+            })
+        })
+        console.log("helloUpdate")
+       await reStart()
+    }
+
+</script>
+
+<!--           создание-->
+
+<script>
+    async function createNewUser(){
+        console.log("new")
+        const username = $('#nameUserInput').val()
+        const password = $('#passwordCreate').val()
+        let array = $('#disabledSelect').val()
+        await   fetch("/admin/createNewUs", {
+            method : 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+                authorities: array
+            })
+        })
+        console.log("helloCreate")
+      await  reStart()
+    }
+</script>
+
+<!--                удаление-->
+
+<script>
+  async    function deleteData(id){
+   await     fetch(`/admin/deleteById/` + id, {
+            method : 'DELETE'
+        })
+            .then(response => response.json())
+            .then(result => {
+                $('#idFormDelete').val(result.id)
+                $('#usernameFormDelete').val(result.username)
+                $('#passwordFormDelete').val(result.password)
+                let roles = result.authorities
+                let roleAll = "";
+                for (let role of roles){
+                    roleAll = roleAll + role.authority + " "
+                }
+                $('#formRoleDelete').val(roleAll)
+            })
+    }
+</script>
+
+<script>
+ async   function deleteResult(){
+        let id = $('#idFormDelete').val()
+   await     fetch(`/admin/deleteResult/${id}`, {
+            method : 'DELETE'
+        })
+     console.log("helloDelete")
+     reStart()
+    }
+
+</script>
+
+<script>
+    $(document).ready(function (){
+        $('#admin').on('click', function (){
+            $('#usersAll').css('display' , 'block');
+            $('#userOne').css('display' , 'none');
+            $(this).addClass('active')
+            $('#user').removeClass('active')
+        })
+    })
+</script>
+
+<script>
+    $(document).ready(function (){
+        $('#user').on('click', function (){
+            $('#userOne').css('display' , 'block');
+            $('#usersAll').css('display' , 'none');
+            $(this).addClass('active');
+            $('#admin').removeClass('active')
+        })
+    })
+</script>
+
+</body>
+</html>
